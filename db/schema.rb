@@ -20,11 +20,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_29_180017) do
   end
 
   create_table "reviews", force: :cascade do |t|
+    t.integer "product_id"
     t.string "reviewer_name"
     t.text "written_review"
     t.integer "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_reviews_on_product_id"
   end
 
+  add_foreign_key "reviews", "products"
 end

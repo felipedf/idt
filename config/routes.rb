@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   namespace :api do
-    resource :products, only: :index
+    resources :products, only: :index
   end
 
   get '/*path' => 'homepage#index'
