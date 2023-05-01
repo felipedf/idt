@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReviewModal from './ReviewModal';
+import StarReview from "./StarReview";
 
 const Products = () => {
     const navigate = useNavigate();
@@ -42,7 +43,10 @@ const Products = () => {
                 <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text">{product.description}</p>
-                    <Link to={'#'} onClick={() => handleReviewClick(product)} className="btn custom-button">
+                    <div className="mb-3">
+                        <StarReview rating={product.overall_rating} />
+                    </div>
+                    <Link to={'#'} onClick={() => handleReviewClick(product)} className="card-text btn custom-button">
                         Review Product
                     </Link>
                 </div>

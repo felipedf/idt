@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { FaStar } from 'react-icons/fa';
+import StarReview from "./StarReview";
 
 const ReviewModal = ({product, handleCloseModal}) => {
     const [rating, setRating] = useState(0);
@@ -56,18 +57,7 @@ const ReviewModal = ({product, handleCloseModal}) => {
                 <div className="form-group mb-3">
                     <label>Rating:</label>
                     <div>
-                        {[...Array(5)].map((star, i) => {
-                            const ratingValue = i + 1;
-                            return (
-                                <FaStar
-                                    key={i}
-                                    className="star"
-                                    color={ratingValue <= rating ? '#ffc107' : '#e4e5e9'}
-                                    size={25}
-                                    onClick={() => handleRatingClick(ratingValue)}
-                                />
-                            );
-                        })}
+                        <StarReview handleRatingClick={handleRatingClick} rating={rating} />
                     </div>
                 </div>
             </div>
