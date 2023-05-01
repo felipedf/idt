@@ -1,27 +1,40 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { FaStar } from 'react-icons/fa';
+import snakeCaseKeys from 'snakecase-keys';
 import StarReview from "./StarReview";
 
 const ReviewModal = ({product, handleCloseModal}) => {
     const [rating, setRating] = useState(0);
-    const [userName, setUserName] = useState('');
+    const [reviewerName, setReviewerName] = useState('');
     const [reviewText, setReviewText] = useState('');
 
     const handleRatingClick = (value) => {
         setRating(value);
     };
 
-    const handleSubmitReview = () => {
-        // Here you can add code to submit the review data to your backend or database
-        // For this example, we'll just log the data to the console
-        console.log({
-            rating,
-            userName,
-            reviewText,
-            productId: product.id,
-        });
-        handleCloseModal();
+    const handleSubmitReview = async () => {
+        try {
+            const response = await fetch(`/api/products/${product.id}/reviews`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(snakeCaseKeys({
+                    rating,
+                    reviewerName,
+                    reviewText,
+                    productId: product.id,
+                })),
+            });
+
+            if (!response.ok) {
+                throw new Error('Something went wrong!');
+            }
+
+            handleCloseModal();
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -45,12 +58,12 @@ const ReviewModal = ({product, handleCloseModal}) => {
             </div>
             <div className="col-md-11">
                 <div className="form-group">
-                    <label htmlFor="userName">Your Name:</label>
+                    <label htmlFor="reviewerName">Your Name:</label>
                     <input
                         type="text"
-                        id="userName"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        id="reviewerName"
+                        value={reviewerName}
+                        onChange={(e) => setReviewerName(e.target.value)}
                         className="form-control mb-3"
                     />
                 </div>
