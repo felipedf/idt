@@ -44,6 +44,7 @@ const Products = () => {
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text">{product.description}</p>
                     <div className="mb-3">
+                        {console.log(product.overall_rating) }
                         <StarReview rating={product.overall_rating} />
                     </div>
                     <Link to={'#'} onClick={() => handleReviewClick(product)} className="card-text btn custom-button">
