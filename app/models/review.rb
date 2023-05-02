@@ -1,6 +1,6 @@
 class Review < ApplicationRecord
   validates :reviewer_name, presence: true
-  validates :rating, presence: true
+  validates :rating, presence: true, numericality: { in: 1..5 }
 
   belongs_to :product
 
@@ -16,6 +16,7 @@ class Review < ApplicationRecord
   def weighted_average
     total_reviews = product.reviews.count.to_f
     return 0 if total_reviews.zero?
+
     (product.overall_rating * ((total_reviews - 1) / total_reviews)) + (rating * (1 / total_reviews))
   end
 end
