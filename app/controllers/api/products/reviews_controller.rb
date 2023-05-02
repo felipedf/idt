@@ -9,7 +9,7 @@ module Api
         if @review.save
           render json: @review, status: :created
         else
-          render json: @review.errors, status: :unprocessable_entity
+          render json: @review.errors.full_messages, status: :unprocessable_entity
         end
       end
 

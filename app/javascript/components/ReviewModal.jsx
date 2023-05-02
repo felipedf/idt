@@ -24,15 +24,15 @@ const ReviewModal = ({product, handleCloseModal, handleModalSubmission}) => {
     }
 
     const handleSubmitReview = async () => {
-        setRatingTouched(true);
-        setReviewerNameTouched(true);
-        if (!rating) {
-            return;
-        }
-
-        if (!isValidName) {
-            return;
-        }
+        // setRatingTouched(true);
+        // setReviewerNameTouched(true);
+        // if (!rating) {
+        //     return;
+        // }
+        //
+        // if (!isValidName) {
+        //     return;
+        // }
 
         try {
             const response = await fetch(`/api/products/${product.id}/reviews`, {
@@ -49,7 +49,9 @@ const ReviewModal = ({product, handleCloseModal, handleModalSubmission}) => {
             });
 
             if (!response.ok) {
-                throw new Error('Something went wrong!');
+                const errorResponse = await response.json();
+                const errorMessage = errorResponse || 'Something went wrong!';
+                throw new Error(errorMessage);
             }
 
             handleModalSubmission();
