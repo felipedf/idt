@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Alert from 'react-bootstrap/Alert';
 import ReviewModal from './ReviewModal';
 import StarReview from "./StarReview";
 
@@ -8,9 +9,11 @@ const Products = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState();
     const [showReviewModal, setShowReviewModal] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
     const imagePlaceHolder = 'https://picsum.photos/200';
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         const url = "/api/products";
         fetch(url)
             .then((res) => {
@@ -29,6 +32,14 @@ const Products = () => {
     }
 
     const handleCloseModal = () => {
+        setShowReviewModal(false);
+    }
+
+    const handleModalSubmission = () => {
+        setShowAlert(true)
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 5000);
         setShowReviewModal(false);
     }
 
@@ -63,13 +74,20 @@ const Products = () => {
 
     return (
         <>
+            {showAlert && (
+                <Alert key="success" variant="success" onClose={() => setShowAlert(false)} dismissible>
+                    <Alert.Heading>Success!</Alert.Heading>
+                    <p>
+                        Your review has been submitted successfully.
+                    </p>
+                </Alert>
+            )}
             <section className="jumbotron jumbotron-fluid text-center">
                 <div className="container py-5">
-                    <h1 className="display-4">Products for every occasion</h1>
+                    <h1 className="display-4">Products for you</h1>
                     <p className="lead text-muted">
-                        We’ve pulled together our most popular products, our latest
-                        additions, and our editor’s picks, so there’s sure to be something
-                        tempting for you to try.
+                        We have compiled a selection of our top-selling
+                        recent additions, and choices recommended by us.
                     </p>
                 </div>
             </section>
@@ -85,6 +103,7 @@ const Products = () => {
                 <ReviewModal
                     product={selectedProduct}
                     handleCloseModal={handleCloseModal}
+                    handleModalSubmission={handleModalSubmission}
                 />
             )}
         </>

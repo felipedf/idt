@@ -3,16 +3,37 @@ import Modal from 'react-bootstrap/Modal';
 import snakeCaseKeys from 'snakecase-keys';
 import StarReview from "./StarReview";
 
-const ReviewModal = ({product, handleCloseModal}) => {
+const ReviewModal = ({product, handleCloseModal, handleModalSubmission}) => {
     const [rating, setRating] = useState(0);
     const [reviewerName, setReviewerName] = useState('');
     const [reviewText, setReviewText] = useState('');
+    const [reviewerNameTouched, setReviewerNameTouched] = useState(false);
+    const [ratingTouched, setRatingTouched] = useState(false);
 
+    const isValidName = reviewerName.trim().length > 0;
+    const nameInputIsInvalid = !isValidName && reviewerNameTouched;
+    const nameInputClasses = nameInputIsInvalid ? 'form-control is-invalid' : 'form-control';
+
+    const ratingInputIsInvalid = !rating && ratingTouched;
     const handleRatingClick = (value) => {
         setRating(value);
     };
 
+    const nameInputBluerHandler = () => {
+        setReviewerNameTouched(true);
+    }
+
     const handleSubmitReview = async () => {
+        setRatingTouched(true);
+        setReviewerNameTouched(true);
+        if (!rating) {
+            return;
+        }
+
+        if (!isValidName) {
+            return;
+        }
+
         try {
             const response = await fetch(`/api/products/${product.id}/reviews`, {
                 method: 'POST',
@@ -31,7 +52,7 @@ const ReviewModal = ({product, handleCloseModal}) => {
                 throw new Error('Something went wrong!');
             }
 
-            handleCloseModal();
+            handleModalSubmission();
         } catch (error) {
             console.error(error);
         }
@@ -57,20 +78,23 @@ const ReviewModal = ({product, handleCloseModal}) => {
                 </div>
             </div>
             <div className="col-md-11">
-                <div className="form-group">
+                <div className="form-group mb-3">
                     <label htmlFor="reviewerName">Your Name:</label>
                     <input
                         type="text"
                         id="reviewerName"
                         value={reviewerName}
                         onChange={(e) => setReviewerName(e.target.value)}
-                        className="form-control mb-3"
+                        onBlur={nameInputBluerHandler}
+                        className={nameInputClasses}
                     />
+                    { nameInputIsInvalid && <p className="text-danger">Please enter your name</p> }
                 </div>
                 <div className="form-group mb-3">
                     <label>Rating:</label>
                     <div>
                         <StarReview handleRatingClick={handleRatingClick} rating={rating} />
+                        { ratingInputIsInvalid && <p className="text-danger">Please select a rating</p> }
                     </div>
                 </div>
             </div>
